@@ -1,0 +1,88 @@
+
+The links 'https://github.com/Mrzulubuntu/zulubuntu', 'https://github.com/Mrzulubuntu/zulubuntu/tree/main/apps', 'https://github.com/Mrzulubuntu/zulubuntu/tree/main/templates' 'https://github.com/Mrzulubuntu/zulubuntu/tree/main/config' refers to my new repository that we want to edit. It currently has a wonderful homepage / index page which we want to reserve and keep it as it is or at least for now. What we want is to add another page that will have our implemntation of the local tradingview kind of platform using the Tradingview lightweight library and a wonderful and key library 'https://github.com/louisnw01/lightweight-charts-python'. What we want to build is actually a series of things so as to make it as identical as possible to the actual Tradingview so we can access the familiar tools we are so accoustumed to. But first thing first, we will be streaming live data from binance. We already have our api ready to go. The things that we need to have / implement / have are:
+
+	1. Full Symbol and Interval Selector (TradingView Style). Symbol dropdown: BTCUSDT, ETHUSDT, BNBUSDT (easily expandable). Interval dropdown: supports tick, seconds, minutes, hours, days, weeks, months, and quarters. Dynamic WebSocket Routing. Cleanly tears down and reinitializes chart + socket on every change.
+
+	2. Cleanly tears down and reinitializes chart + socket on every change. Separate RSI, MACD, Stochastic into their own pane containers. Sync time across panes. Improve layout spacing/responsiveness. A clean multi-pane layout: 🟠 Main pane → Candles, EMA, BBANDS. 🟣 RSI pane → Full-sized, synced time. 🔵 MACD pane → Own section, synced. ✅ Time synchronization across panes. ✅ Full dynamic switching still works.
+
+	3. Persist OHLC + all indicator values into DuckDB. Use Polars + Apache Arrow for blazing-fast queries. Prepare real-time + backtesting interfaces. DuckDB-based Local Data Storage.   Each symbol+interval combo stores to its own .duckdb file. Structure includes:timestamp, symbol, interval. open, high, low, close. ema, rsi, macd, bb_upper, bb_lower. All in columnar DuckDB tables – ready for lightning-speed queries and backtesting. To be fully equiped with / to: Query OHLC + indicators with Polars.Run analytics or backtests across months of data.Add historical candles to chart on load
+
+	4. Toggleable Indicators + UI Checkboxes. What we want to have is '🧩 UI toggles for RSI, MACD, EMA, and Bollinger Bands. ✅ Realtime on/off control over visibility using checkboxes. ✅ Responsive to user interaction — no reload required'. We also want to persist toggle states in localStorage so the user’s preferences sticks. And also 'Style toggles with AdminLTE badges or switches'.
+
+	5. Add historical candles from DuckDB on chart load. Enable multi-timeframe overlay from backend data. Add Datasette dashboard for offline exploration. Like, Load Historical Candles (from DuckDB). When the chart loads, we’ll fetch (say) the last 300 candles from DuckDB. These will be used to: Immediately populate the chart. Feed all indicator lines (EMA, RSI, etc.) on initial view. Also, Live Stream Picks Up (from Binance). After that initial history is drawn, your existing WebSocket feed kicks in. Every new candle pushed by Binance updates: The chart visually. DuckDB persistently. Indicator overlays. It will be powerful because Fast loading: You see a chart instantly, even before Binance streams. Backtesting-ready: All your candles + indicators are persisted. Smooth updates: New data keeps coming in live without breaking visuals. That is, we want to have DuckDB-powered historical candle loading on chart startup: When a WebSocket connection is made: The backend fetches the latest 300 candles from DuckDB. These are streamed to the frontend before Binance live data takes over. Why It Rocks: The chart loads with data instantly — no blank screen! All previously streamed data is reused — nothing wasted. Still fully live and real-time via Binance. 
+
+	6. 1R Range Bar Logic. Streams historical candles one by one with 0.5s delay. Default interval to 1R and it is important to include all the other ticks too (1,10, 100, 1000). A reminder that we want all the time intervals that are in the Tradingview platform eg 1,3,5,15,30,45mins then 1,2,3,4, 6, 12 hrs, 1 day, 1 week, 1 month, 3 months, 6 months, 12 months. Also, 1 tick, 10 ticks, 100ticks,  1000 ticks. Tradingview platform has both 'ticks' and ranges and we want them both. They are diffrent and we want them both. 
+
+	7. We also want a replay feature like that of the Tradingview Platform. Streams OHLC+indicator rows from DuckDB. Streams OHLC+indicator rows from DuckDB. Sends them over the same WebSocket channel. Honors speed, start_time, end_time as params. When we hit Play, and it starts plotting candle by candle. Each candle comes in based on a timer (e.g. every 1s, 0.5s). Indicators are calculated + plotted just like in live mode. We can be able to like choose: Speed: 1x, 2x, 5x... Start time and End time. Pause, Rewind, or Fast forward. How Replay ought to work with our Current System: 🔧 Component	Role in Replay. DuckDB	Stores all the OHLC and indicators by timestamp ✅ WebSocket	Delivers replay candles just like Binance does ✅. Frontend Chart	Already set up to render streamed candles ✅. Replay Controller	You’ll add this UI to trigger start/pause/ff ✅. Add speed control (1x / 2x / 5x buttons). Add replay UI (Play, Pause, Stop, Rewind). Hook into keyboard shortcuts (space, left/right arrow). Combine with indicator auto-refresh during replay.
+
+	8. We also want that sidebar feature / panel. The part that has symbol, price, change in price (daily), change in % change (daily) that autorefreshes.
+
+	9. It is also very, very important that, we have at least 7 of the most popular indicators and the ability / ui to switch them off and on, to change things like parameter values and what not.
+
+	10. The script ought to be robust. Since it is python script, without any err handling capacity installed, we need to develop an error handling mechanism that come from our end and those that come from Binance. In case of an error, we need to sleep and check again after a prescribed time. We ought to have a yagmail library setup and telegram python communication mechanism for communication, written and developed but commented out until that time that they will be set-up. It goes without saying, that we need an extensive amount of logging handling it using those critical data tools like duckdb, apache arrow, datasette and or polars whenever possible / necessarily. We want an extensive amount of logging. What we also need, in large amounts, is print statement. Even if something is trivial, we want to see the terminal informing us of what is developing all around. We want comments even on trivial things so as to know which phase, part we are in and later for debugging reasons, we want a lot and a lot of comments. Usually, we place the comments to comeout with a transition, a smooth transition where we can adjust the delay of the letters and whatnot when it comes to controlling the speed of the transition but generally speaking, we like it when, the print statement (custom) is available. 
+
+	11. Also in that script, we want to have a progress bar. Usually we employ tqdm. It is awesome especially when we use it and the progress is inline. We like it when the progress shows inline in that progressbar. It is a simple and elegant way. We usually fine tune that tqdm to have five fifferent colors so they change after every 20 percent. It is a way we do to beautify the progressbar and it is paramount that it the loading happens inline. We want a customized progressbar and we even saw that inside, they can be customized to be like '[|||||| 200]' or like '[██████ 800] ' or like '[★★★★★ 500]'. We would like to implement these into our progressbar and be using them randomly.
+
+
+	12. We also want to employ the use of tables. There are a couple of awesome python libraries that offer beautiful tables. We would like those to be employed alongside the print statements. Elegance.
+
+	13. We want to have a lot and a lot of comments on everything. In fact, we would rather have those comment qoute things that enables people to generate markdowns but also, we would wan to have usual comments that are stacked here and there explaining even the most basic things. 
+
+	14. We would like to emphasis on the need and importance of err handling and reporting mechanism because errs help in debugging among other things. The types of errs can differ and it is imperative that we get err handling done right, both at the server level and api's like Binance and the rest. 
+
+	15. On Storage + Query Engine, we are thinking, move to Polars + Apache Arrow for in-RAM processing	Lightning fast analysis / aggregation and use Polars on top of DuckDB or as standalone for indicators, backtests. Add ClickHouse & TimescaleDB	For large-scale price + trade storage -- store tick-level or minute candles and query billions of rows. Cache with Redis	Super quick access to current candle state	Push most recent values from WebSocket into Redis.
+
+	16. On Backend / Realtime Infrastructure, use FastAPI instead of Django REST (for API endpoints) -- Async, faster, easier to scale	Still use Django for templates if needed. Replace Channels with Socket.IO (via Node.js) or WebSockets via FastAPI. Easier to handle hundreds of concurrent sockets	If needed under load. se Celery + Redis	For async background jobs (fetch historical data, replay simulation). Keeps UI fast and offloads work.
+
+	17. On Frontend / Charts, Switch to React (with Hooks or Zustand state)	Componentized, reactive state	Use lightweight-charts-react. Move replay and indicators to Web Workers	Offload heavy calculation from UI thread. Makes UI snappy even on slow machines.
+
+	18. On Architecture / Deployment, Dockerize each service maybe even use k8. Easier to test, deploy, swap out parts DB, backend, frontend, WebSocket worker. Use Kafka	for building multi-service event system	that will be helpful later for distributed microservices especially when we start automating trading based on signals. We might also need to use NATS...perhaps.
+
+	19. On Security + Auth, Add user login system using google.  Supabase Auth sounds super best option but the thing that we want, is that only we can enter; only our email address can be valid so if a stranger logs into the site with their google account, they will get redirected to a 404 page. 
+
+	20. We are of the opinion that we ought to build DuckDB + indicators to use Polars for blazing speed. Plug in Kafka producers/consumers to simulate or handle ticks, trades, replays. Set up Supabase integration: Store user info, watchlists, settings. Map trades to users then slowly migrate backend API endpoints (e.g. /trades/, /replay/) into FastAPI.
+
+	21. We ought to add a settings UI to be editing things like params, line details, color, tooltips etc.
+
+	22. Advanced Charting & Visualization
+
+		Drawing Tools: Trend lines, horizontal/vertical lines, Fibonacci retracements, support/resistance levels, geometric shapes
+		Chart Types: Heikin-Ashi, Renko, Point & Figure, Line Break charts beyond standard candlesticks
+		Volume Profile: Market profile, volume-by-price, VWAP anchored to different periods
+		Multiple Symbol Overlay: Compare different assets on same chart with normalized scaling
+		Custom Timeframes: Non-standard intervals like 2min, 7min, 4hr for advanced strategies
+
+		Enhanced Technical Analysis
+
+		Advanced Indicators: Ichimoku Cloud, Elliott Wave patterns, Harmonic patterns, Custom indicator builder
+		Alerts System: Price alerts, indicator crossovers, pattern recognition alerts with push notifications
+		Screener: Real-time scanning across all symbols for specific conditions
+		Strategy Backtesting: Visual strategy tester with performance metrics, drawdown analysis
+		Paper Trading: Virtual trading environment with P&L tracking
+
+		Data & Performance Optimization
+
+		Multi-Exchange Support: Coinbase, Kraken, KuCoin data aggregation
+		Tick-by-Tick Data: Sub-second granularity for scalping strategies
+		Data Compression: Efficient storage using columnar formats, data deduplication
+		Smart Caching: Predictive prefetching based on user patterns
+		Offline Mode: Continue analysis with cached data during connectivity issues
+
+		User Experience & Interface
+
+		Workspace Management: Save/load custom layouts, multiple workspace templates
+		Keyboard Shortcuts: Power user navigation, hotkeys for common actions
+		Mobile Responsive: Touch-optimized charts for tablets/phones
+		Dark/Light Themes: Multiple color schemes, high contrast mode
+		Accessibility: Screen reader support, keyboard navigation
+
+		Advanced Features
+
+		Market Depth: Order book visualization, bid/ask spread analysis
+		News Integration: Real-time news feed correlated with price movements
+		Social Trading: Share analysis, follow other traders' ideas
+		Economic Calendar: Major events with historical impact analysis
+		Correlation Analysis: Cross-asset correlation matrices, sector rotation
+
+
+We want the step by step guide on how to build the final product based on the information provided above. We want the what, the where, the how and a lot of explanations on what we are doing, why, how they connect to other parts. We also want to checklist before and a summary of all we have done.
